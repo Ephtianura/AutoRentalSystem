@@ -1,9 +1,12 @@
+using AutoRentalSystem.API.Extensions;
 using AutoRentalSystem.Application.Contracts;
 using AutoRentalSystem.Application.Services;
 using AutoRentalSystem.Core.Contracts;
 using AutoRentalSystem.DataAccess;
 using AutoRentalSystem.DataAccess.Repositories;
 using AutoRentalSystem.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +50,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+var jwtOptions = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+builder.Services.AddApiAuthentication(jwtOptions);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -55,7 +61,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseHttpsRedirection();
+
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+}
+);
 
 app.UseAuthentication();
 app.UseAuthorization();

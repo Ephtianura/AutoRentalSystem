@@ -1,0 +1,47 @@
+﻿using AutoRentalSystem.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+namespace AutoRentalSystem.API.Extensions
+{
+    public static class ApiExtensions
+    {
+
+        public static void AddApiAuthentication(
+    this IServiceCollection services,
+    JwtOptions jwtOptions) // получаем уже Value, а не IOptions
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtOptions.Secretkey))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["cookies"];
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            services.AddAuthorization();
+        }
+
+    }
+}

@@ -1,4 +1,5 @@
-﻿using AutoRentalSystem.Application.Contracts.DTO;
+﻿using AutoRentalSystem.Application.Contracts;
+using AutoRentalSystem.Application.Contracts.DTO;
 using AutoRentalSystem.Application.Services;
 using AutoRentalSystem.Core.Contracts;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,9 @@ namespace AutoRentalSystem.API.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
+
+
+        
 
         public AuthController(IAuthService authService, IUserService userService)
         {
@@ -31,7 +35,17 @@ namespace AutoRentalSystem.API.Controllers
         {
             var token = await _authService.Login(request.Email, request.Password);
 
-            return Ok(token);
+            HttpContext.Response.Cookies.Append("cookies", token);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
+        {
+            
+            return Ok();
         }
 
         //[Authorize]

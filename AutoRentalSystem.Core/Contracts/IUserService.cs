@@ -2,7 +2,7 @@
 using AutoRentalSystem.Core.Models.Common;
 using AutoRentalSystem.Core.Models.Filters;
 
-namespace AutoRentalSystem.Application.Services
+namespace AutoRentalSystem.Application.Contracts
 {
     public interface IUserService
     {
