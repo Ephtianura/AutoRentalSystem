@@ -11,6 +11,13 @@ namespace AutoRentalSystem.DataAccess.Repositories
         private readonly AutoRentalDbContext _db;
         public PaymentRepository(AutoRentalDbContext db) => _db = db;
 
+        public async Task<Payment?> GetByIdAsync(int id)
+        {
+            return await _db.Payments
+                .Include(p => p.Booking)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task<PagedResult<Payment>> GetFilteredAsync(PaymentFilter filter, PagedRequest request)
         {
             IQueryable<Payment> query = _db.Payments.Include(p => p.Booking);

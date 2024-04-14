@@ -1,11 +1,12 @@
-﻿using AutoRentalSystem.Core.Contracts;
+﻿using AutoRentalSystem.Application.Contracts;
+using AutoRentalSystem.Core.Contracts;
 using AutoRentalSystem.Core.Models;
 
 namespace AutoRentalSystem.Application.Services
 {
 
     // ================== AUDIT LOGS ==================
-    public class AuditLogService
+    public class AuditLogService : IAuditLogService
     {
         private readonly IAuditLogRepository _logs;
 

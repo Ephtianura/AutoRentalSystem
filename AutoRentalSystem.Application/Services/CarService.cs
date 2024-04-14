@@ -1,4 +1,5 @@
-﻿using AutoRentalSystem.Core.Contracts;
+﻿using AutoRentalSystem.Application.Contracts;
+using AutoRentalSystem.Core.Contracts;
 using AutoRentalSystem.Core.Models;
 using AutoRentalSystem.Core.Models.Common;
 using AutoRentalSystem.Core.Models.Filters;
@@ -6,7 +7,7 @@ using AutoRentalSystem.Core.Models.Filters;
 namespace AutoRentalSystem.Application.Services
 {
     // ================== CARS ==================
-    public class CarService
+    public class CarService : ICarService
     {
         private readonly ICarRepository _cars;
 

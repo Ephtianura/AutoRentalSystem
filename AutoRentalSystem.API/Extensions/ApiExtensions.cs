@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace AutoRentalSystem.API.Extensions
@@ -10,8 +11,8 @@ namespace AutoRentalSystem.API.Extensions
     {
 
         public static void AddApiAuthentication(
-    this IServiceCollection services,
-    JwtOptions jwtOptions) // получаем уже Value, а не IOptions
+            this IServiceCollection services,
+            JwtOptions jwtOptions)
         {
             services.AddAuthentication(options =>
             {
@@ -27,8 +28,10 @@ namespace AutoRentalSystem.API.Extensions
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtOptions.Secretkey))
+                        Encoding.UTF8.GetBytes(jwtOptions.Secretkey)),
+                    RoleClaimType = ClaimTypes.Role // 👈 добавить это
                 };
+
 
                 options.Events = new JwtBearerEvents
                 {
@@ -40,7 +43,15 @@ namespace AutoRentalSystem.API.Extensions
                 };
             });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy =>
+                    policy.RequireRole("Admin"));
+
+                options.AddPolicy("UserPolicy", policy =>
+                    policy.RequireRole("User", "Admin"));
+            });
+
         }
 
     }

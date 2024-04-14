@@ -10,6 +10,12 @@ namespace AutoRentalSystem.DataAccess.Repositories
     {
         private readonly AutoRentalDbContext _db;
         public FineRepository(AutoRentalDbContext db) => _db = db;
+        public async Task<Fine?> GetByIdAsync(int id)
+        {
+            return await _db.Fines
+                .Include(f => f.Booking)
+                .FirstOrDefaultAsync(f => f.Id == id);
+        }
 
         public async Task<PagedResult<Fine>> GetFilteredAsync(FineFilter filter, PagedRequest request)
         {

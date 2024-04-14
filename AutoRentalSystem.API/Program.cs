@@ -38,6 +38,9 @@ builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
 //DI Services
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<UserService>();
+
 builder.Services.AddScoped<CarService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<ContractService>();
@@ -46,12 +49,22 @@ builder.Services.AddScoped<FineService>();
 builder.Services.AddScoped<AuditLogService>();
 
 //DI Auth
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 var jwtOptions = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 builder.Services.AddApiAuthentication(jwtOptions);
+
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
 
 var app = builder.Build();
 

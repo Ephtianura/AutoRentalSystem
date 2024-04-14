@@ -103,6 +103,7 @@ namespace AutoRentalSystem.Core.Models
 
         
         public void UpdatePhone(string phone) => Phone = phone;
+
         public void UpdateEmail(string email) => Email = email;
         public void ChangePassword(string newHash) => PasswordHash = newHash;
         public void Block() => Status = UserStatus.Blocked;

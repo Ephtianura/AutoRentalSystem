@@ -15,10 +15,13 @@ namespace AutoRentalSystem.DataAccess.Repositories
         public async Task<User?> GetByIdAsync(int id) =>
             await _db.Users.FindAsync(id);
 
-        public async Task<User?> GetByEmailAsync(string email) =>
-            await _db.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == email) ?? throw new Exception();
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
 
         public async Task<PagedResult<User>> GetFilteredAsync(UserFilter filter, PagedRequest request)
         {

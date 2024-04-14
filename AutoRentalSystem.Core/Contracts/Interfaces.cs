@@ -29,6 +29,7 @@ namespace AutoRentalSystem.Core.Contracts
     // 📅 Бронювання
     public interface IBookingRepository
     {
+        Task<IEnumerable<Booking>> GetByUserIdAsync(int userId);
         Task<Booking?> GetByIdAsync(int id);
         Task<PagedResult<Booking>> GetFilteredAsync(BookingFilter filter, PagedRequest request);
         Task AddAsync(Booking booking);
@@ -48,6 +49,7 @@ namespace AutoRentalSystem.Core.Contracts
     {
         Task<PagedResult<Payment>> GetFilteredAsync(PaymentFilter filter, PagedRequest request);
         Task AddAsync(Payment payment);
+        Task<Payment?> GetByIdAsync(int id);
         Task UpdateAsync(Payment payment);
     }
 
@@ -55,6 +57,7 @@ namespace AutoRentalSystem.Core.Contracts
     public interface IFineRepository
     {
         Task<PagedResult<Fine>> GetFilteredAsync(FineFilter filter, PagedRequest request);
+        Task<Fine?> GetByIdAsync(int id);
         Task AddAsync(Fine fine);
         Task UpdateAsync(Fine fine);
     }

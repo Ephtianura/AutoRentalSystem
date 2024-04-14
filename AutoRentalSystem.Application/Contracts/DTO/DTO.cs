@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace AutoRentalSystem.Application.Contracts.DTO
 {
-    // DTO для регистрации
+    // 🔐 ===== AUTH =====
+
     public record RegisterUserRequest(
         [Required] string UserName,
         [Required] string Password,

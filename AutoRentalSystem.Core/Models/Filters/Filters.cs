@@ -53,6 +53,7 @@ namespace AutoRentalSystem.Core.Models.Filters
         public FineStatus? Status { get; set; }
         public DateTime? IssuedFrom { get; set; }
         public DateTime? IssuedTo { get; set; }
+        public int UserId { get; set; }
     }
     public class AuditLogFilter
     {

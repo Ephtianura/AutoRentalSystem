@@ -31,15 +31,16 @@ namespace AutoRentalSystem.Application.Services
         public async Task<string> Login(string email, string password)
         {
             var user = await _users.GetByEmailAsync(email);
+            if (user == null)
+                throw new UnauthorizedAccessException("User not found.");
+
             var result = _passwordHasher.Verify(password, user.PasswordHash);
-            if (result == false)
-            {
-                throw new Exception("Failed to login");
-            }
+            if (!result)
+                throw new UnauthorizedAccessException("Invalid password.");
 
             var token = _jwtProvider.GenerateToken(user);
+            return token;
+        }
 
-            return token;            
-        }  
     }
 }

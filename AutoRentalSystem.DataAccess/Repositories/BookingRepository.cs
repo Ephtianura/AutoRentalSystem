@@ -31,6 +31,14 @@ namespace AutoRentalSystem.DataAccess.Repositories
 
             return await query.PaginateAsync(request);
         }
+        public async Task<IEnumerable<Booking>> GetByUserIdAsync(int userId)
+        {
+            return await _db.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.User)
+                .Where(b => b.UserId == userId)
+                .ToListAsync();
+        }
 
         public async Task AddAsync(Booking booking)
         {
