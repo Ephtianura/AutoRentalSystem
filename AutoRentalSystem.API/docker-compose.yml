@@ -9,6 +9,16 @@ services:
       - "5003:5003"
     depends_on:
       - postgres
+  # frontend:
+  #   build:
+  #     context: ../AutoRentalSystem.Frontend/autorentalsystem
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - api
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://api:5003
 
   postgres:
     image: postgres:16

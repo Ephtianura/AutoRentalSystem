@@ -27,4 +27,7 @@ RUN dotnet publish "./AutoRentalSystem.API.csproj" -c $BUILD_CONFIGURATION -o /a
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:5003
+
 ENTRYPOINT ["dotnet", "AutoRentalSystem.API.dll"]

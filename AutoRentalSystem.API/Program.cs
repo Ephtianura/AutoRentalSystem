@@ -58,6 +58,20 @@ var jwtOptions = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOpt
 builder.Services.AddApiAuthentication(jwtOptions);
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
+
+
+
+
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -67,6 +81,8 @@ builder.Services.AddControllers()
 
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
