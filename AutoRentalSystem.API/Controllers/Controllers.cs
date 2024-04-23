@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace AutoRentalSystem.API.Controllers
 {
@@ -99,6 +100,40 @@ namespace AutoRentalSystem.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var user = await _users.GetById(id);
+            return user == null ? NotFound() : Ok(user);
+        }
+
+        [Authorize(Policy = "UserPolicy")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            // Извлекаем userId из токена (Claim)
+            var userIdClaim = User.FindFirst("userId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized("Не удалось определить пользователя (нет userId в токене).");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                return BadRequest("Некорректный идентификатор пользователя.");
+
+            var user = await _users.GetById(userId);
+            return user == null ? NotFound() : Ok(user);
+        }
+
+       
+        [HttpGet("amam")]
+        public async Task<IActionResult> GetM2e()
+        {
+            // Извлекаем userId из токена (Claim)
+            var userIdClaim = User.FindFirst("userId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized("Не удалось определить пользователя (нет userId в токене).");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                return BadRequest("Некорректный идентификатор пользователя.");
+
+            var user = await _users.GetById(userId);
             return user == null ? NotFound() : Ok(user);
         }
 
@@ -231,7 +266,7 @@ namespace AutoRentalSystem.API.Controllers
 
         // Клиент создаёт бронь
         [Authorize(Policy = "UserPolicy")]
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateBookingDto dto)
         {
             if (!ModelState.IsValid)

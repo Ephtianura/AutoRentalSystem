@@ -1,28 +1,103 @@
-// app/profile/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
+import { useSearchParams, useRouter } from "next/navigation";
+import { getUserMe, getUserById } from "@/lib/api";
+import { ProfileCardUser } from "@/components/ProfileCardUser";
+import { ProfileCardAdmin } from "@/components/ProfileCardAdmin";
+
+type User = {
+  id: number;
+  userName: string;
+  email: string;
+  role: "User" | "Admin";
+  status: "Active" | "Blocked";
+  registeredAt?: string;
+  phone?: string | null;
+  driverLicenseNumber?: string | null;
+};
+
+// Маппинг с полями сервера на фронт
+const mapUser = (raw: any): User => ({
+  id: raw.id,
+  userName: raw.userName,
+  email: raw.email,
+  role: raw.role,
+  status: raw.status,
+  registeredAt: raw.registrationDate, // сервер присылает registrationDate
+  phone: raw.phone,
+  driverLicenseNumber: raw.driverLicenseNumber,
+});
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const data = await apiFetch("/Users/me"); // допустим есть эндпоинт /Users/me
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const queryId = searchParams.get("id");
+
+useEffect(() => {
+  const fetchUser = async () => {
+    setLoading(true);
+    try {
+      // Текущий пользователь
+      const meRaw = await getUserMe();
+      const me = mapUser(meRaw);
+      setCurrentUser(me);
+
+      console.log("CurrentUser:", me);
+console.log("Fetching userId:", queryId);
+
+
+      let data: User;
+
+      if (queryId && me.role === "Admin") {
+        const parsedId = Number(queryId);
+        if (!parsedId) throw new Error("Неверный ID пользователя");
+        console.log("Fetching user by ID:", parsedId);
+        const userRaw = await getUserById(parsedId);
+        data = mapUser(userRaw);
+      } else {
+        data = me;
+        if (queryId && me.role !== "Admin") router.replace("/profile");
+      }
+
       setUser(data);
-    };
-    fetchUser();
-  }, []);
+    } catch (err: any) {
+      console.error("Ошибка при загрузке профиля:", err);
+      if (err.status === 401) router.push("/login");
+      else setError(err.data?.message || err.message || "Ошибка загрузки профиля");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (!user) return <p>Загрузка профиля...</p>;
+  fetchUser();
+}, [queryId, router]);
 
-  return (
-    <div className="bg-white p-6 rounded shadow max-w-md">
-      <h1 className="text-2xl font-bold mb-4">Профиль</h1>
-      <p>Имя: {user.userName}</p>
-      <p>Email: {user.email}</p>
-      <p>Роль: {user.role}</p>
-      <p>Статус: {user.status}</p>
-    </div>
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-[70vh] text-gray-500 text-lg">
+        Загрузка профиля...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-[70vh] text-red-500 text-lg">
+        {error}
+      </div>
+    );
+
+  if (!user) return null;
+
+  return currentUser?.role === "Admin" ? (
+    <ProfileCardAdmin user={user} />
+  ) : (
+    <ProfileCardUser user={user} />
   );
 }

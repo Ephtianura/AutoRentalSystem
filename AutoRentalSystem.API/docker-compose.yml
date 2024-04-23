@@ -1,47 +1,57 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:16
+    container_name: auto_rental_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "54321"
+      POSTGRES_DB: AutoRental
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data_new:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: auto_rental_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5052:80"
+    depends_on:
+      - postgres
+
   api:
     build:
       context: ..
       dockerfile: AutoRentalSystem.API/Dockerfile
+    container_name: auto_rental_api
     ports:
       - "5003:5003"
     depends_on:
       - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=AutoRental;Username=postgres;Password=54321
+    restart: always
+
   # frontend:
   #   build:
-  #     context: ../AutoRentalSystem.Frontend/autorentalsystem
+  #     context: ../AutoRentalSystem.Frontend\autorentalsystem
   #     dockerfile: Dockerfile
+  #   container_name: auto_rental_frontend
   #   ports:
   #     - "3000:3000"
   #   depends_on:
   #     - api
   #   environment:
   #     - NEXT_PUBLIC_API_URL=http://api:5003
-
-  postgres:
-    image: postgres:16
-    container_name: auto_rental_system
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "54321"
-      POSTGRES_DB: AutoRental
-    ports:
-      - "5434:5432"  
-    volumes:
-      - postgres_data_new:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_auto.rental
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5052:80"     
-    depends_on:
-      - postgres
+  #   restart: always
 
 volumes:
   postgres_data_new:

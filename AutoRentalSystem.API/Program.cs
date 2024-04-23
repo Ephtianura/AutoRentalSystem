@@ -83,6 +83,7 @@ builder.Services.AddControllers()
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
+app.UseCors("AllowLocalhost");
 
 if (app.Environment.IsDevelopment())
 {
