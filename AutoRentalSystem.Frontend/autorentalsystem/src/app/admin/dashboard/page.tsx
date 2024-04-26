@@ -19,6 +19,12 @@ import { useEffect, useState } from "react";
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState<any>(null);
+    const statusTranslation: Record<string, string> = {
+        Approved: "Підтверджено",
+        Rejected: "Відхилено",
+        Pending: "Очікує",
+        Finished: "Завершено",
+    };
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -46,7 +52,10 @@ export default function AdminDashboard() {
                 bookings.forEach((b: Booking) => {
                     statusMap[b.status] = (statusMap[b.status] || 0) + 1;
                 });
-                const statusData = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
+                const statusData = Object.entries(statusMap).map(([name, value]) => ({
+                    name: statusTranslation[name] ?? name,
+                    value,
+                }));
 
                 setStats({
                     users: usersData?.items?.length ?? 0,
