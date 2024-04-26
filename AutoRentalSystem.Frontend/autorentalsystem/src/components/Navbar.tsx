@@ -49,7 +49,7 @@ const handleLogout = async () => {
             Профіль
           </Link>
           {userRole === "Admin" && (
-            <Link href="/admin/users" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/admin/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors">
               Адмін панель
             </Link>
           )}

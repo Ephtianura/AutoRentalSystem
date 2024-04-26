@@ -32,7 +32,7 @@ export default function HomePage() {
   if (isLoggedIn === null) {
     return (
       <div className="flex justify-center items-center h-screen text-gray-500">
-        Проверка авторизации...
+        Перевірка авторизації...
       </div>
     );
   }
@@ -45,15 +45,15 @@ export default function HomePage() {
 
       <main className="flex-1 px-6 py-10">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          🚗 Доступные автомобили
+          🚗 Доступні автомобілі
         </h1>
 
         {loading ? (
-          <p className="text-gray-500 text-center mt-20">Загрузка автомобилей...</p>
+          <p className="text-gray-500 text-center mt-20">Завантаження автомобілів...</p>
         ) : error ? (
           <p className="text-red-500 text-center mt-20">{error}</p>
         ) : cars.length === 0 ? (
-          <p className="text-gray-500 text-center">Нет доступных автомобилей</p>
+          <p className="text-gray-500 text-center">Немає доступних автомобілів</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {cars.map((car) => (
