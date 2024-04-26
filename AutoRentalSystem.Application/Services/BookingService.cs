@@ -11,15 +11,24 @@ namespace AutoRentalSystem.Application.Services
     {
         private readonly IBookingRepository _bookings;
         private readonly ICarRepository _cars;
+        private readonly IUserRepository _users;
 
-        public BookingService(IBookingRepository bookings, ICarRepository cars)
+        public BookingService(IBookingRepository bookings, ICarRepository cars, IUserRepository users)
         {
             _bookings = bookings;
             _cars = cars;
+            _users = users;
         }
 
         public async Task<Booking> CreateBooking(int userId, Booking booking)
         {
+            var user = await _users.GetByIdAsync(userId);
+            if (user == null)
+                throw new InvalidOperationException("User not found.");
+
+            if (user.Status == UserStatus.Blocked)
+                throw new InvalidOperationException("Blocked users cannot create bookings.");
+
             var car = await _cars.GetByIdAsync(booking.CarId);
             if (car == null || car.Status != CarStatus.Available)
                 throw new InvalidOperationException("Car not available.");
@@ -39,6 +48,7 @@ namespace AutoRentalSystem.Application.Services
             await _bookings.AddAsync(booking);
             return booking;
         }
+
 
         public async Task ApproveBooking(int bookingId)
         {

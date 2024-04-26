@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 
 interface FilterProps {
   filters: any;
@@ -14,9 +15,24 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
     setFilters((prev: any) => ({ ...prev, [key]: value || undefined }));
   };
 
+interface StatusFilterProps {
+  statuses: string[]; // список статусов
+  filters: {
+    Status?: string; // текущее значение фильтра
+  };
+  handleChange: (field: string, value: string) => void; // функция обработки изменений
+}
+
+const statusTranslations: Record<string, string> = {
+  Available: "Доступний",
+  InRent: "Орендований",
+  Maintenance: "На обслуговуванні",
+  Booked: "Заброньований",
+};
+
   return (
     <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-6 space-y-6 border border-gray-300">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Фильтры</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">Фільтри</h2>
 
       {/* Бренд */}
       <div>
@@ -25,7 +41,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
           type="text"
           value={filters.Brand || ""}
           onChange={(e) => handleChange("Brand", e.target.value)}
-          placeholder="Например: Toyota"
+          placeholder="Наприклад: Toyota"
           className="w-full p-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
         />
       </div>
@@ -37,7 +53,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
           type="text"
           value={filters.Model || ""}
           onChange={(e) => handleChange("Model", e.target.value)}
-          placeholder="Например: Corolla"
+          placeholder="Наприклад: Corolla"
           className="w-full p-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
         />
       </div>
@@ -45,7 +61,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
       {/* Годы */}
       <div className="flex gap-3">
         <div className="flex-1">
-          <label className="block text-gray-800 font-medium mb-1">Год от</label>
+          <label className="block text-gray-800 font-medium mb-1">Рік от</label>
           <input
             type="number"
             value={filters.YearFrom || ""}
@@ -55,7 +71,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
           />
         </div>
         <div className="flex-1">
-          <label className="block text-gray-800 font-medium mb-1">Год до</label>
+          <label className="block text-gray-800 font-medium mb-1">Рік до</label>
           <input
             type="number"
             value={filters.YearTo || ""}
@@ -69,7 +85,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
       {/* Цена */}
       <div className="flex gap-3">
         <div className="flex-1">
-          <label className="block text-gray-800 font-medium mb-1">Мин. цена</label>
+          <label className="block text-gray-800 font-medium mb-1">Мін. цена</label>
           <input
             type="number"
             value={filters.MinPricePerDay || ""}
@@ -92,13 +108,13 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
 
       {/* Трансмиссия */}
       <div>
-        <label className="block text-gray-800 font-medium mb-1">Трансмиссия</label>
+        <label className="block text-gray-800 font-medium mb-1">Трансмісія</label>
         <select
           value={filters.Transmission || ""}
           onChange={(e) => handleChange("Transmission", e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
         >
-          <option value="">Любая</option>
+          <option value="">Будь-яка</option>
           {transmissions.map((t) => (
             <option key={t} value={t}>
               {t}
@@ -109,13 +125,13 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
 
       {/* Тип топлива */}
       <div>
-        <label className="block text-gray-800 font-medium mb-1">Топливо</label>
+        <label className="block text-gray-800 font-medium mb-1">Паливо</label>
         <select
           value={filters.FuelType || ""}
           onChange={(e) => handleChange("FuelType", e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
         >
-          <option value="">Любое</option>
+          <option value="">Будь-яке</option>
           {fuelTypes.map((f) => (
             <option key={f} value={f}>
               {f}
@@ -127,7 +143,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
       {/* Количество мест */}
       <div className="flex gap-3">
         <div className="flex-1">
-          <label className="block text-gray-800 font-medium mb-1">Мин. места</label>
+          <label className="block text-gray-800 font-medium mb-1">Мін. місця</label>
           <input
             type="number"
             value={filters.MinSeats || ""}
@@ -136,7 +152,7 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
           />
         </div>
         <div className="flex-1">
-          <label className="block text-gray-800 font-medium mb-1">Макс. места</label>
+          <label className="block text-gray-800 font-medium mb-1">Макс. місця</label>
           <input
             type="number"
             value={filters.MaxSeats || ""}
@@ -145,32 +161,32 @@ export default function CarFilter({ filters, setFilters }: FilterProps) {
           />
         </div>
       </div>
+      
 
       {/* Статус */}
       <div>
-        <label className="block text-gray-800 font-medium mb-1">Статус</label>
-        <select
-          value={filters.Status || ""}
-          onChange={(e) => handleChange("Status", e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
-        >
-          <option value="">Все</option>
-          {statuses.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-      </div>
+      <label className="block text-gray-800 font-medium mb-1">Статус</label>
+      <select
+        value={filters.Status || ""}
+        onChange={(e) => handleChange("Status", e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
+      >
+        <option value="">Усі</option>
+        {statuses.map((s) => (
+          <option key={s} value={s}>
+            {statusTranslations[s] || s}
+          </option>
+        ))}
+      </select>
+    </div>
 
       {/* Сброс */}
       <button
         onClick={() => setFilters({})}
         className="w-full py-2 mt-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition-colors"
       >
-        Сбросить фильтры
+        Скинути фільтри
       </button>
     </div>
   );
 }
- 

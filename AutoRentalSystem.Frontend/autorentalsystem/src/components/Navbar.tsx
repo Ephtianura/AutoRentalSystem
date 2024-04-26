@@ -8,55 +8,72 @@ import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const router = useRouter();
-  const { isLoggedIn, setIsLoggedIn, refreshAuth } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, userRole, setUserRole } = useAuth();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
-  const handleLogout = async () => {
+const handleLogout = async () => {
+  try {
     await logout();
+  } catch (err: any) {
+    if (err.status !== 401) {
+      console.error("Logout error:", err);
+    }
+  } finally {
     setIsLoggedIn(false);
+    setUserRole(null);
     router.push("/login");
-  };
+  }
+};
 
-  if (!mounted) return null; // пока не замонтирован, не рендерим
+
+  if (!mounted) return null;
 
   return (
     <nav className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        <div className="flex items-center space-x-6">
-          <Link href="/" className="font-bold text-xl text-gray-800 hover:text-blue-600 transition-colors">
-            AutoRental
-          </Link>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+    <div className="flex items-center space-x-6">
+      <Link href="/" className="font-bold text-xl text-gray-800 hover:text-blue-600 transition-colors">
+        AutoRental
+      </Link>
+      {isLoggedIn && (
+        <>
           <Link href="/my-bookings" className="text-gray-600 hover:text-blue-600 transition-colors">
             Мої бронювання
+          </Link>
+          <Link href="/my-fines" className="text-gray-600 hover:text-blue-600 transition-colors">
+            Мої штрафи
           </Link>
           <Link href="/profile" className="text-gray-600 hover:text-blue-600 transition-colors">
             Профіль
           </Link>
-          <Link href="/admin/users" className="text-gray-600 hover:text-blue-600 transition-colors">
-            Адмін панель
-          </Link>
-        </div>
+          {userRole === "Admin" && (
+            <Link href="/admin/users" className="text-gray-600 hover:text-blue-600 transition-colors">
+              Адмін панель
+            </Link>
+          )}
+        </>
+      )}
+    </div>
 
-        {isLoggedIn ? (
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition-colors"
-          >
-            Вийти
-          </button>
-        ) : (
-          <Link
-            href="/login"
-            className="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Увійти
-          </Link>
-        )}
-      </div>
-    </nav>
+    {isLoggedIn ? (
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition-colors"
+      >
+        Вийти
+      </button>
+    ) : (
+      <Link
+        href="/login"
+        className="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Увійти
+      </Link>
+    )}
+  </div>
+</nav>
+
   );
 }

@@ -10,6 +10,12 @@ export default function CarDetailsPage() {
   const [car, setCar] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+const STATUS_UA: Record<string, string> = {
+  Available: "Доступний",
+  Booked: "Заброньований",
+  InMaintenance: "На техобслуговуванні",
+  Unavailable: "Недоступний",
+};
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -26,9 +32,9 @@ export default function CarDetailsPage() {
     fetchCar();
   }, [id]);
 
-  if (loading) return <p className="text-center text-gray-500 mt-20">Загрузка...</p>;
+  if (loading) return <p className="text-center text-gray-500 mt-20">Завантаження...</p>;
   if (error) return <p className="text-center text-red-500 mt-20">{error}</p>;
-  if (!car) return <p className="text-center text-gray-500 mt-20">Автомобиль не найден.</p>;
+  if (!car) return <p className="text-center text-gray-500 mt-20">Автомобіль не знайдено.</p>;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -48,17 +54,19 @@ export default function CarDetailsPage() {
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
               {car.brand} {car.model}
             </h1>
-            <p className="text-gray-500 mb-4">{car.year} год выпуска</p>
+            <p className="text-gray-500 mb-4">{car.year} рік випуску</p>
 
             <ul className="space-y-2 text-gray-700">
               <li><b>Номер:</b> {car.plateNumber}</li>
               <li><b>VIN:</b> {car.vin}</li>
-              <li><b>Пробег:</b> {car.mileage.toLocaleString()} км</li>
-              <li><b>Топливо:</b> {car.fuelType}</li>
-              <li><b>Трансмиссия:</b> {car.transmission}</li>
-              <li><b>Мест:</b> {car.seats}</li>
-              <li><b>Состояние:</b> {car.status}</li>
+              <li><b>Пробіг:</b> {car.mileage.toLocaleString()} км</li>
+              <li><b>Паливо:</b> {car.fuelType}</li>
+              <li><b>Трансмісія:</b> {car.transmission}</li>
+              <li><b>Місць:</b> {car.seats}</li>
+              <li><b>Стан:</b> {STATUS_UA[car.status] || car.status}</li>
+
             </ul>
+
           </div>
 
           <div className="mt-6">
@@ -66,7 +74,7 @@ export default function CarDetailsPage() {
               {car.pricePerDay}₴ / день
             </p>
             <p className="text-gray-600 text-sm">
-              Залог: {car.depositAmount}₴
+              Запорука: {car.depositAmount}₴
             </p>
           </div>
         </div>
@@ -77,7 +85,7 @@ export default function CarDetailsPage() {
         <CarBookingForm car={car} />
       ) : (
         <p className="text-center mt-8 text-gray-600">
-          🚫 Этот автомобиль сейчас недоступен для бронирования.
+          🚫 Цей автомобіль зараз недоступний для бронювання.
         </p>
       )}
     </div>

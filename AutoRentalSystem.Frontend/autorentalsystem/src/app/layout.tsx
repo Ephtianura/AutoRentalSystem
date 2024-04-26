@@ -14,8 +14,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <div className="bg-gray-50 min-h-screen flex flex-col">
             <Navbar />
-
-            {/* ⛔️ УБРАЛ max-w-7xl, чтобы главная могла быть на всю ширину */}
             <main className="flex-1">{children}</main>
           </div>
         </AuthProvider>

@@ -17,15 +17,15 @@ export default function MyBookingsPage() {
     fetchBookings();
   }, []);
 
-  if (loading) return <p>Загрузка бронирований...</p>;
+  if (loading) return <p>Завантаження бронювань...</p>;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Мои бронирования</h1>
+      <h1 className="text-2xl font-bold mb-6">Мої бронювання</h1>
       {bookings.length > 0 ? (
         bookings.map((b) => <BookingCard key={b.id} booking={b} />)
       ) : (
-        <p>У вас пока нет бронирований</p>
+        <p>У вас поки що немає бронювань</p>
       )}
     </div>
   );

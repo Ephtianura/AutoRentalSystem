@@ -2,38 +2,47 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/api";
+import { login, getUserMe } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setIsLoggedIn } = useAuth();
+  const { setIsLoggedIn, setUserRole } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); // <-- сюда будем писать ошибки
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); // очищаем старую ошибку
+    setError(null);
+
     try {
-      const res = await login({ email, password });
+  const res = await login({ email, password });
 
-      // проверяем, есть ли ошибка в ответе
-      if (res.error) {
-        setError(res.error); // отображаем текст ошибки на форме
-        return;
-      }
+  if (res.error) {
+    setError(res.error);
+    return;
+  }
 
-      setIsLoggedIn(true);
-      router.push("/");
-    } catch (err: any) {
-      setError(err.message || "Помилка авторизації");
-    } finally {
-      setLoading(false);
-    }
+  // ⚙️ Запрашиваем профиль только если логин прошёл успешно
+  // и сервер вернул Set-Cookie (новую сессию)
+  const user = await getUserMe().catch(() => null);
+  if (!user) {
+    console.warn("Не удалось загрузить профиль пользователя после входа");
+    return;
+  }
+
+  setIsLoggedIn(true);
+  setUserRole(user.role || null);
+
+  router.push("/");
+} catch (err: any) {
+  setError(err.message || "Помилка авторизації");
+}
+
   };
 
   return (
@@ -70,17 +79,13 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 text-sm mt-1">{"Неправильний логін або пароль"}</p> // <-- выводим ошибку прямо на форме
-          )}
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-lg text-white font-semibold transition-all ${
-              loading
-                ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg"
+              loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg"
             }`}
           >
             {loading ? "Входимо..." : "Увійти"}

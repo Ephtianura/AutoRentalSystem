@@ -53,7 +53,7 @@ namespace AutoRentalSystem.API.Controllers
                 return StatusCode(500, new { error = "Internal server error" });
             }
         }
-        [Authorize]
+        
         [HttpPost("logout")]
         public IActionResult Logout()
         {
@@ -106,23 +106,6 @@ namespace AutoRentalSystem.API.Controllers
         [Authorize(Policy = "UserPolicy")]
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
-        {
-            // Извлекаем userId из токена (Claim)
-            var userIdClaim = User.FindFirst("userId")?.Value;
-
-            if (string.IsNullOrEmpty(userIdClaim))
-                return Unauthorized("Не удалось определить пользователя (нет userId в токене).");
-
-            if (!int.TryParse(userIdClaim, out int userId))
-                return BadRequest("Некорректный идентификатор пользователя.");
-
-            var user = await _users.GetById(userId);
-            return user == null ? NotFound() : Ok(user);
-        }
-
-       
-        [HttpGet("amam")]
-        public async Task<IActionResult> GetM2e()
         {
             // Извлекаем userId из токена (Claim)
             var userIdClaim = User.FindFirst("userId")?.Value;
@@ -246,8 +229,13 @@ namespace AutoRentalSystem.API.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly BookingService _bookings;
+        private readonly IUserService _users;
 
-        public BookingsController(BookingService bookings) => _bookings = bookings;
+        public BookingsController(BookingService bookings, IUserService users)
+        {
+            _bookings = bookings ?? throw new ArgumentNullException(nameof(bookings));
+            _users = users ?? throw new ArgumentNullException(nameof(users));
+        }
         public class CreateBookingDto
         {
             [Required]
@@ -273,6 +261,15 @@ namespace AutoRentalSystem.API.Controllers
                 return BadRequest(ModelState);
 
             var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
+            var user = await _users.GetById(userId);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            if (user.Status == UserStatus.Blocked)
+                return StatusCode(StatusCodes.Status403Forbidden,
+                    new { message = "Заблокований користувач не може створювати бронювання." });
+
 
             var booking = new Booking
             {
@@ -286,6 +283,7 @@ namespace AutoRentalSystem.API.Controllers
 
             return Ok(MapToDto(result));
         }
+
 
 
         // Клиент видит свои бронирования
