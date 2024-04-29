@@ -17,10 +17,12 @@ namespace AutoRentalSystem.DataAccess.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
+            var normalizedEmail = email.ToLower();
             return await _db.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == email);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
         }
+
 
 
         public async Task<PagedResult<User>> GetFilteredAsync(UserFilter filter, PagedRequest request)

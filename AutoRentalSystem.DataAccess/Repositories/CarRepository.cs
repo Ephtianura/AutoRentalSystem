@@ -32,9 +32,17 @@ namespace AutoRentalSystem.DataAccess.Repositories
             IQueryable<Car> query = _db.Cars;
 
             if (!string.IsNullOrWhiteSpace(filter.Brand))
-                query = query.Where(c => c.Brand.Contains(filter.Brand));
+            {
+                var brandLower = filter.Brand.ToLower();
+                query = query.Where(c => c.Brand.ToLower().Contains(brandLower));
+            }
+
             if (!string.IsNullOrWhiteSpace(filter.Model))
-                query = query.Where(c => c.Model.Contains(filter.Model));
+            {
+                var modelLower = filter.Model.ToLower();
+                query = query.Where(c => c.Model.ToLower().Contains(modelLower));
+            }
+
             if (filter.YearFrom.HasValue)
                 query = query.Where(c => c.Year >= filter.YearFrom.Value);
             if (filter.YearTo.HasValue)
@@ -43,10 +51,19 @@ namespace AutoRentalSystem.DataAccess.Repositories
                 query = query.Where(c => c.PricePerDay >= filter.MinPricePerDay.Value);
             if (filter.MaxPricePerDay.HasValue)
                 query = query.Where(c => c.PricePerDay <= filter.MaxPricePerDay.Value);
+
             if (!string.IsNullOrWhiteSpace(filter.FuelType))
-                query = query.Where(c => c.FuelType.Contains(filter.FuelType));
+            {
+                var fuelLower = filter.FuelType.ToLower();
+                query = query.Where(c => c.FuelType.ToLower().Contains(fuelLower));
+            }
+
             if (!string.IsNullOrWhiteSpace(filter.Transmission))
-                query = query.Where(c => c.Transmission.Contains(filter.Transmission));
+            {
+                var transLower = filter.Transmission.ToLower();
+                query = query.Where(c => c.Transmission.ToLower().Contains(transLower));
+            }
+
             if (filter.MinSeats.HasValue)
                 query = query.Where(c => c.Seats >= filter.MinSeats.Value);
             if (filter.MaxSeats.HasValue)
@@ -56,6 +73,7 @@ namespace AutoRentalSystem.DataAccess.Repositories
 
             return await query.PaginateAsync(request);
         }
+
 
         public async Task AddAsync(Car car)
         {

@@ -34,22 +34,22 @@ const handleLogout = async () => {
     <nav className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
     <div className="flex items-center space-x-6">
-      <Link href="/" className="font-bold text-xl text-gray-800 hover:text-blue-600 transition-colors">
+      <Link href="/" className="font-bold text-xl text-gray-800 hover:text-primary-hover transition-colors">
         AutoRental
       </Link>
       {isLoggedIn && (
         <>
-          <Link href="/my-bookings" className="text-gray-600 hover:text-blue-600 transition-colors">
+          <Link href="/my-bookings" className="text-gray-600 hover:text-primary-hover transition-colors">
             Мої бронювання
           </Link>
-          <Link href="/my-fines" className="text-gray-600 hover:text-blue-600 transition-colors">
+          <Link href="/my-fines" className="text-gray-600 hover:text-primary-hover transition-colors">
             Мої штрафи
           </Link>
-          <Link href="/profile" className="text-gray-600 hover:text-blue-600 transition-colors">
+          <Link href="/profile" className="text-gray-600 hover:text-primary-hover transition-colors">
             Профіль
           </Link>
           {userRole === "Admin" && (
-            <Link href="/admin/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-hover transition-colors">
               Адмін панель
             </Link>
           )}
@@ -67,7 +67,7 @@ const handleLogout = async () => {
     ) : (
       <Link
         href="/login"
-        className="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition-colors"
+        className="bg-primary text-white px-4 py-1 rounded-lg hover:bg-primary-hover transition-colors"
       >
         Увійти
       </Link>

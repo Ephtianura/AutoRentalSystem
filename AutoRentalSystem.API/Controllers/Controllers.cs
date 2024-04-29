@@ -30,10 +30,17 @@ namespace AutoRentalSystem.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
         {
-            await _authService.Register(request.UserName, request.Password, request.Email, request.DateOfBirth);
-
-            return Ok();
+            try
+            {
+                await _authService.Register(request.UserName, request.Password, request.Email, request.DateOfBirth);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
@@ -374,6 +381,12 @@ namespace AutoRentalSystem.API.Controllers
                     ContractDate = booking.Contract.ContractDate,
                     IsSignedByUser = booking.Contract.IsSignedByUser,
                     IsSignedByAdmin = booking.Contract.IsSignedByAdmin
+                },
+                User = booking.User == null ? null : new UserDto   
+                {
+                    Id = booking.User.Id,
+                    UserName = booking.User.UserName,
+                    Email = booking.User.Email
                 }
             };
         }
@@ -389,7 +402,15 @@ namespace AutoRentalSystem.API.Controllers
         public decimal TotalPrice { get; set; }
         public CarDto Car { get; set; } = null!;
         public ContractDto? Contract { get; set; }
+        public UserDto? User { get; set; } 
     }
+    public class UserDto
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; } = null!;
+        public string Email { get; set; } = null!;
+    }
+
 
     public class CarDto
     {

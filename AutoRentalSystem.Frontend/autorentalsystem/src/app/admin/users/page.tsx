@@ -93,13 +93,13 @@ export default function AdminUsersPage() {
   return (
     <AdminLayout>
       <div className="p-6 space-y-6">
-        <h1 className="text-4xl font-extrabold text-violet-700 drop-shadow-sm">
+        <h1 className="text-4xl font-extrabold text-primary-700 drop-shadow-sm">
           👥 Адмінка користувачів
         </h1>
 
 
         {loading ? (
-          <p className="text-gray-500">Завантаження користувачів...</p>
+          <p className="text-gray-text">Завантаження користувачів...</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -108,7 +108,7 @@ export default function AdminUsersPage() {
                   {["id", "userName", "email", "role", "status"].map((col) => (
                     <th
                       key={col}
-                      className="px-4 py-2 text-left text-sm font-medium text-gray-500 cursor-pointer"
+                      className="px-4 py-2 text-left text-sm font-medium text-gray-text cursor-pointer"
                       onClick={() => handleSort(col)}
                     >
                       {col === "id"
@@ -123,7 +123,7 @@ export default function AdminUsersPage() {
                       {renderSortArrow(col)}
                     </th>
                   ))}
-                  <th className="px-4 py-2 text-center text-sm font-medium text-gray-500">
+                  <th className="px-4 py-2 text-center text-sm font-medium text-gray-text">
                     Дії
                   </th>
                 </tr>
@@ -170,7 +170,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleRoleChange(u.id, "Admin")}
                             disabled={updating === u.id}
-                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
+                            className="px-3 py-1 bg-primary-400 text-white rounded hover:bg-primary-600 transition-colors text-sm"
                           >
                             Зробити адміном
                           </button>
@@ -178,7 +178,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleRoleChange(u.id, "User")}
                             disabled={updating === u.id}
-                            className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors text-sm"
+                            className="px-3 py-1 bg-gray-text text-white rounded hover:bg-gray-700 transition-colors text-sm"
                           >
                             Зробити користувачем
                           </button>
@@ -186,7 +186,7 @@ export default function AdminUsersPage() {
 
                         <button
                           onClick={() => router.push(`/profile?id=${u.id}`)}
-                          className="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors text-sm"
+                          className="px-3 py-1 bg-primary-700 text-white rounded hover:bg-primary-800 transition-colors text-sm"
                         >
                           Переглянути профіль
                         </button>

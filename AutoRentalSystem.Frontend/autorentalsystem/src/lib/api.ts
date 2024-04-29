@@ -47,6 +47,14 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   export const login = (body: any) =>
       apiFetch("/Auth/login", { method: "POST", body: JSON.stringify(body) });
 
+  export const register = (body: any) =>
+  apiFetch("/Auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+
   export const logout = () => apiFetch("/Auth/logout", { method: "POST" });
 
   // Cars
@@ -114,6 +122,11 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
 
   export const finishBooking = (id: number) =>
     apiFetch(`/Bookings/${id}/finish`, { method: "POST" });
+
+  export const getAllBookings = async (pageNumber = 1, pageSize = 50) => {
+    // Можно передавать сортировку, если нужно
+    return apiFetch(`/Bookings/all?PageNumber=${pageNumber}&PageSize=${pageSize}`);
+  };
 
 
   //Штрафи

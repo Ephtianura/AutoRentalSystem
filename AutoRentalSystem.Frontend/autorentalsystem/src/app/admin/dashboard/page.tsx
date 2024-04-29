@@ -105,9 +105,10 @@ export default function AdminDashboard() {
 
     return (
         <AdminLayout>
-            <h1 className="text-4xl font-extrabold mb-8 text-violet-700 drop-shadow-sm">
-                📊 Панель адміністратора
-            </h1>
+           <h1 className="text-4xl font-extrabold mb-8 text-primary drop-shadow-sm">
+    📊 Панель адміністратора
+</h1>
+
 
             {/* Cards */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -126,20 +127,20 @@ export default function AdminDashboard() {
             {/* Charts */}
             <div className="grid lg:grid-cols-2 gap-10">
                 <GradientCard hoverEffect={true}>
-                    <h2 className="text-xl font-semibold mb-4 text-violet-700">
+                    <h2 className="text-xl font-semibold mb-4 text-primary">
                         Динаміка бронювань по місяцях
                     </h2>
                     <ResponsiveContainer width="100%" height={250}>
                         <LineChart data={stats?.monthlyBookings ?? []}>
-                            <XAxis dataKey="month" stroke="#A78BFA" />
-                            <YAxis stroke="#A78BFA" />
+                            <XAxis dataKey="month" stroke="var(--color-primary-light)" />
+                            <YAxis stroke="var(--color-primary-light)" />
                             <Tooltip />
                             <Line
                                 type="monotone"
                                 dataKey="count"
-                                stroke="#7C3AED"
+                                stroke="var(--color-primary)"
                                 strokeWidth={3}
-                                dot={{ r: 5, fill: "#7C3AED" }}
+                                dot={{ r: 5, fill: "var(--color-primary-hover)" }}
                             />
                         </LineChart>
                     </ResponsiveContainer>
@@ -147,7 +148,7 @@ export default function AdminDashboard() {
                 </GradientCard>
 
                 <GradientCard hoverEffect={true}>
-                    <h2 className="text-xl font-semibold mb-4 text-violet-700">
+                    <h2 className="text-xl font-semibold mb-4 text-primary">
                         Статуси бронювань
                     </h2>
                     <ResponsiveContainer width="100%" height={250}>
@@ -181,8 +182,8 @@ export default function AdminDashboard() {
 function StatCard({ label, value }: { label: string; value: number }) {
     return (
         <GradientCard>
-            <h3 className="text-gray-500 text-sm font-medium tracking-wide">{label}</h3>
-            <p className="text-3xl font-bold text-violet-700 mt-2 drop-shadow-sm">{value}</p>
+            <h3 className="text-[var(--color-gray-light)] text-sm font-medium tracking-wide">{label}</h3>
+            <p className="text-3xl font-bold text-[var(--color-primary)] mt-2 drop-shadow-sm">{value}</p>
         </GradientCard>
     );
 }

@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
+@theme {
+   /* Фоны */
+  --color-bg-light: #f9fafb;
+  --color-bg: #ffffff;
+  
+  --foreground: #171717;
+  /* 🎨 Основные цвета темы */
+  --color-primary: theme('colors.indigo.500');
+  --color-primary-hover: #6d28d9;
+  --color-primary-ring: #c4b5fd;
+  --color-primary-light: #A78BFA;
+  --color-primary-50: theme('colors.indigo.50');
+  --color-primary-100: theme('colors.indigo.100');
+  --color-primary-200: theme('colors.indigo.200');
+  --color-primary-400: theme('colors.indigo.400');
+  --color-primary-500: theme('colors.indigo.500');
+  --color-primary-600: theme('colors.indigo.600');
+  --color-primary-700: theme('colors.indigo.700');
+  --color-primary-800: theme('colors.indigo.800');
+    /* ⚙️ Серые оттенки */
+  --color-gray-text: #4b5563;
+  --color-gray-light: #9ca3af;
+  --color-bg-light: #f9fafb;
+
+  /* Можно добавить вторичные и нейтральные */
+  --color-secondary: #2563eb;
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+}
+/*
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
+   🎨 Основные цвета темы 
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-ring: #c4b5fd;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+   Можно добавить вторичные и нейтральные 
+  --color-secondary: #2563eb;
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+} 
+*/
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
+ /* <YAxis stroke="#A78BFA" />
+primary: #7c3aed */
+
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+
   font-family: Arial, Helvetica, sans-serif;
 }

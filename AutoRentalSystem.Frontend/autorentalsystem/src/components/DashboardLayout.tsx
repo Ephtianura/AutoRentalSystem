@@ -10,7 +10,7 @@ type DashboardLayoutProps = {
 
 export default function DashboardLayout({ children, noContainer }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 text-gray-800">
+    <div className="flex min-h-screen bg-[var(--color-bg-light)] text-[var(--color-gray-text)]">
       {/* Sidebar */}
       <Sidebar />
 
@@ -19,7 +19,7 @@ export default function DashboardLayout({ children, noContainer }: DashboardLayo
         {noContainer ? (
           children
         ) : (
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-8 border border-white/20">
+          <div className="bg-[var(--color-bg)]/80 backdrop-blur-md rounded-2xl shadow-lg p-8 border border-[var(--color-bg)]/20">
             {children}
           </div>
         )}

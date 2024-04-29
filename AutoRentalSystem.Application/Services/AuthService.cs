@@ -21,12 +21,15 @@ namespace AutoRentalSystem.Application.Services
 
         public async Task Register(string userName, string password, string email, DateTime dateOfBirth)
         {
+            var existingByEmail = await _users.GetByEmailAsync(email);
+            if (existingByEmail != null)
+                throw new InvalidOperationException("Користувач із таким email вже існує");
             var hashedPassword = _passwordHasher.Generate(password);
-
             var user = User.Create(userName, hashedPassword, email, dateOfBirth);
 
-            await _users.AddAsync(user); 
+            await _users.AddAsync(user);
         }
+
 
         public async Task<string> Login(string email, string password)
         {

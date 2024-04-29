@@ -69,7 +69,7 @@ export default function AdminCarsPage() {
   return (
     <AdminLayout>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Автомобілі</h1>
+        <h1 className="text-3xl font-bold text-primary-hover">Автомобілі</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode("list")}
@@ -89,7 +89,7 @@ export default function AdminCarsPage() {
           </button>
           <button
             onClick={() => router.push("/admin/cars/add")}
-            className="ml-2 px-4 py-2 rounded bg-violet-600 text-white hover:bg-violet-700 transition"
+            className="ml-2 px-4 py-2 rounded bg-primary-600 text-white hover:bg-primary-700 transition"
           >
             Додати автомобіль
           </button>
@@ -102,7 +102,7 @@ export default function AdminCarsPage() {
         {/* Список/Плитка */}
         <div className="flex-1">
           {loading ? (
-            <p className="text-gray-500">Завантаження...</p>
+            <p className="text-gray-text">Завантаження...</p>
           ) : viewMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {cars.map((car) => (
@@ -140,15 +140,15 @@ export default function AdminCarsPage() {
                     />
                     <div className="space-y-1">
                       <p className="font-semibold text-gray-800">{car.brand} {car.model}</p>
-                      <p className="text-sm text-gray-500">Рік: {car.year}</p>
-                      <p className="text-sm text-gray-500">Ціна/день: {car.pricePerDay}₴</p>
-                      <p className="text-sm text-gray-500">Статус: {car.status}</p>
+                      <p className="text-sm text-gray-text">Рік: {car.year}</p>
+                      <p className="text-sm text-gray-text">Ціна/день: {car.pricePerDay}₴</p>
+                      <p className="text-sm text-gray-text">Статус: {car.status}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => router.push(`/admin/cars/edit?id=${car.id}`)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      className="px-3 py-1 bg-primary-500 text-white rounded hover:bg-primary-600 transition"
                     >
                       Редагувати
                     </button>
