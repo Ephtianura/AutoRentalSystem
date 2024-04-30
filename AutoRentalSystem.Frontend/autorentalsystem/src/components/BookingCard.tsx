@@ -42,7 +42,7 @@ export default function BookingCard({
     ? `${booking.user.userName} (${booking.user.email})`
     : "Користувач не вказаний";
 
-  const imageUrl = booking.car.imageUrl || "/placeholder-car.jpg";
+  const imageUrl = booking.car.imageUrl || "/placeholder-car.webp";
   const statusText = statusTranslations[booking.status] || booking.status;
   const statusColor = statusColors[booking.status] || "#000";
 

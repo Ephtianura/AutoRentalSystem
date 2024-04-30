@@ -9,10 +9,12 @@ export default function CarCard({ car }: { car: any }) {
     >
       <div className="relative h-48 w-full">
         <img
-          src={car.imageUrl || "/placeholder-car.jpg"}
+          src={car.imageUrl || "/placeholder-car.webp"}
           alt={`${car.brand} ${car.model}`}
           className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+          
         />
+
       </div>
       <div className="p-4 space-y-1">
         <h3 className="text-xl font-semibold text-gray-800">{car.brand} {car.model}</h3>

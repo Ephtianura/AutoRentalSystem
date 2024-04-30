@@ -178,7 +178,7 @@ namespace AutoRentalSystem.API.Controllers
     // ================= CARS =================
     [ApiController]
     [Route("api/[controller]")]
-    public class CarsController : ControllerBase
+    public partial class CarsController : ControllerBase
     {
         private readonly CarService _cars;
         public CarsController(CarService cars) => _cars = cars;
@@ -198,11 +198,11 @@ namespace AutoRentalSystem.API.Controllers
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Car car)
+        public async Task<IActionResult> Add([FromForm] Car car, IFormFile? image)
         {
             try
             {
-                await _cars.Add(car);
+                await _cars.Add(car, image);
                 return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
             }
             catch (InvalidOperationException ex)
@@ -211,15 +211,42 @@ namespace AutoRentalSystem.API.Controllers
             }
         }
 
-
         [Authorize(Policy = "AdminPolicy")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Car car)
+        public async Task<IActionResult> Update(int id, [FromForm] Car car, IFormFile? image)
         {
-            if (id != car.Id) return BadRequest("Не існує авто з таким Id");
-            await _cars.Update(car);
-            return NoContent();
+            car.Id = id;
+            try
+            {
+                await _cars.Update(car, image);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
+
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Patch(int id, [FromForm] CarPatchDto dto)
+        {
+            try
+            {
+                await _cars.UpdatePartialAsync(id, dto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { error = "Car not found" });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpDelete("{id}")]
@@ -228,8 +255,9 @@ namespace AutoRentalSystem.API.Controllers
             await _cars.Delete(id);
             return NoContent();
         }
+        
     }
-
+   
     // ================= BOOKINGS =================
     [ApiController]
     [Route("api/[controller]")]
@@ -373,7 +401,8 @@ namespace AutoRentalSystem.API.Controllers
                     Id = booking.Car.Id,
                     Brand = booking.Car.Brand,
                     Model = booking.Car.Model,
-                    PlateNumber = booking.Car.PlateNumber
+                    PlateNumber = booking.Car.PlateNumber,
+                    ImageUrl = booking.Car.ImageUrl
                 },
                 Contract = booking.Contract == null ? null : new ContractDto
                 {
@@ -418,6 +447,7 @@ namespace AutoRentalSystem.API.Controllers
         public string Brand { get; set; } = null!;
         public string Model { get; set; } = null!;
         public string PlateNumber { get; set; } = null!;
+        public string ImageUrl { get; set; } = null!;
     }
 
     public class ContractDto

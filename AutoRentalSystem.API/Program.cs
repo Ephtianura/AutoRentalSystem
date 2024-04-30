@@ -1,3 +1,5 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using AutoRentalSystem.API.Extensions;
 using AutoRentalSystem.Application.Contracts;
 using AutoRentalSystem.Application.Services;
@@ -5,9 +7,11 @@ using AutoRentalSystem.Core.Contracts;
 using AutoRentalSystem.DataAccess;
 using AutoRentalSystem.DataAccess.Repositories;
 using AutoRentalSystem.Infrastructure.Auth;
+using AutoRentalSystem.Infrastructure.FileStorage;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +57,28 @@ builder.Services.AddScoped<AuditLogService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+builder.Services.AddScoped<ICarService, CarService>();
+
+builder.Services.AddScoped<IAmazonS3>(sp =>
+{
+    var config = new AmazonS3Config
+    {
+        ServiceURL = builder.Configuration["AWS:ServiceURL"],
+        ForcePathStyle = true
+    };
+
+    var credentials = new BasicAWSCredentials(
+        builder.Configuration["AWS:AccessKey"],
+        builder.Configuration["AWS:SecretKey"]
+    );
+
+    return new AmazonS3Client(credentials, config);
+});
+
+builder.Services.AddScoped<IFileStorageService>(sp =>
+    new S3FileStorageService(sp.GetRequiredService<IAmazonS3>(), builder.Configuration["AWS:BucketName"])
+);
 
 var jwtOptions = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 builder.Services.AddApiAuthentication(jwtOptions);

@@ -6,7 +6,7 @@ import CarFilter from "@/components/CarFilter";
 import { apiFetch } from "@/lib/api";
 import CarCard from "@/components/CarCard";
 import { Edit3, Trash2, List, Grid } from "lucide-react";
-import { useRouter } from "next/navigation";
+import CarModal from "@/components/CarModal";
 
 type Car = {
   id: number;
@@ -30,27 +30,29 @@ export default function AdminCarsPage() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<any>({});
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
-  const router = useRouter();
+
+  // состояние модалки
+  const [modalCar, setModalCar] = useState<Car | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchCars = async () => {
-  setLoading(true);
-  try {
-    const queryParams = new URLSearchParams(
-      Object.entries(filters)
-        .filter(([_, v]) => v !== undefined && v !== null && v !== "")
-        .map(([k, v]) => [k, String(v)]) // <-- здесь приводим к строке
-    ).toString();
+    setLoading(true);
+    try {
+      const queryParams = new URLSearchParams(
+        Object.entries(filters)
+          .filter(([_, v]) => v !== undefined && v !== null && v !== "")
+          .map(([k, v]) => [k, String(v)])
+      ).toString();
 
-    const data = await apiFetch(`/Cars?${queryParams}`);
-    setCars(data.items || []);
-  } catch (err) {
-    console.error("Error loading cars:", err);
-    setCars([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
+      const data = await apiFetch(`/Cars?${queryParams}`);
+      setCars(data.items || []);
+    } catch (err) {
+      console.error("Error loading cars:", err);
+      setCars([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchCars();
@@ -88,7 +90,10 @@ export default function AdminCarsPage() {
             <Grid size={20} />
           </button>
           <button
-            onClick={() => router.push("/admin/cars/add")}
+            onClick={() => {
+              setModalCar(null); 
+              setModalOpen(true);
+            }}
             className="ml-2 px-4 py-2 rounded bg-primary-600 text-white hover:bg-primary-700 transition"
           >
             Додати автомобіль
@@ -97,9 +102,6 @@ export default function AdminCarsPage() {
       </div>
 
       <div className="flex gap-6">
-        
-
-        {/* Список/Плитка */}
         <div className="flex-1">
           {loading ? (
             <p className="text-gray-text">Завантаження...</p>
@@ -110,7 +112,10 @@ export default function AdminCarsPage() {
                   <CarCard car={car} />
                   <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
-                      onClick={() => router.push(`/admin/cars/edit?id=${car.id}`)}
+                      onClick={() => {
+                        setModalCar(car); 
+                        setModalOpen(true);
+                      }}
                       className="p-1 bg-blue-500 text-white rounded hover:bg-blue-600"
                     >
                       <Edit3 size={16} />
@@ -134,7 +139,7 @@ export default function AdminCarsPage() {
                 >
                   <div className="flex items-center gap-4">
                     <img
-                      src={car.imageUrl || "/placeholder-car.jpg"}
+                      src={car.imageUrl || "../placeholder-car.webp"}
                       alt={`${car.brand} ${car.model}`}
                       className="w-24 h-16 object-cover rounded-lg"
                     />
@@ -147,7 +152,10 @@ export default function AdminCarsPage() {
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => router.push(`/admin/cars/edit?id=${car.id}`)}
+                      onClick={() => {
+                        setModalCar(car);
+                        setModalOpen(true);
+                      }}
                       className="px-3 py-1 bg-primary-500 text-white rounded hover:bg-primary-600 transition"
                     >
                       Редагувати
@@ -164,11 +172,19 @@ export default function AdminCarsPage() {
             </div>
           )}
         </div>
-        {/* Фильтры */}
         <div className="w-72 flex-shrink-0">
           <CarFilter filters={filters} setFilters={setFilters} />
         </div>
       </div>
+
+      {/* Модалка */}
+      {modalOpen && (
+        <CarModal
+          car={modalCar || undefined}
+          onClose={() => setModalOpen(false)}
+          refresh={fetchCars}
+        />
+      )}
     </AdminLayout>
   );
 }

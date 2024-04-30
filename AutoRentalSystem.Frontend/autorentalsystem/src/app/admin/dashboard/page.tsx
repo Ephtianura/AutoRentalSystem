@@ -105,9 +105,9 @@ export default function AdminDashboard() {
 
     return (
         <AdminLayout>
-           <h1 className="text-4xl font-extrabold mb-8 text-primary drop-shadow-sm">
-    📊 Панель адміністратора
-</h1>
+            <h1 className="text-4xl font-extrabold mb-8 text-primary drop-shadow-sm">
+                📊 Панель адміністратора
+            </h1>
 
 
             {/* Cards */}
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
 
             {/* Charts */}
             <div className="grid lg:grid-cols-2 gap-10">
-                <GradientCard hoverEffect={true}>
+                <GradientCard hoverEffect={false}>
                     <h2 className="text-xl font-semibold mb-4 text-primary">
                         Динаміка бронювань по місяцях
                     </h2>
@@ -141,13 +141,14 @@ export default function AdminDashboard() {
                                 stroke="var(--color-primary)"
                                 strokeWidth={3}
                                 dot={{ r: 5, fill: "var(--color-primary-hover)" }}
+                                isAnimationActive={false}  // отключаем анимацию
                             />
                         </LineChart>
                     </ResponsiveContainer>
 
                 </GradientCard>
 
-                <GradientCard hoverEffect={true}>
+                <GradientCard hoverEffect={false}>
                     <h2 className="text-xl font-semibold mb-4 text-primary">
                         Статуси бронювань
                     </h2>
@@ -160,17 +161,16 @@ export default function AdminDashboard() {
                                 innerRadius={60}
                                 outerRadius={100}
                                 paddingAngle={5}
+                                isAnimationActive={false} // отключаем анимацию
                             >
                                 {stats?.statusData?.map((_: { name: string; value: number }, i: number) => (
                                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                                 ))}
-
                             </Pie>
                             <Tooltip />
                             <Legend />
                         </PieChart>
                     </ResponsiveContainer>
-
                 </GradientCard>
 
             </div>
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
 
 function StatCard({ label, value }: { label: string; value: number }) {
     return (
-        <GradientCard>
+        <GradientCard hoverEffect={false}>
             <h3 className="text-[var(--color-gray-light)] text-sm font-medium tracking-wide">{label}</h3>
             <p className="text-3xl font-bold text-[var(--color-primary)] mt-2 drop-shadow-sm">{value}</p>
         </GradientCard>

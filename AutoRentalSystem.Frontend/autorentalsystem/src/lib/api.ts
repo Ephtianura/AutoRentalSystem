@@ -4,9 +4,29 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
+  const body = options.body;
+
+  // --- безопасно создаём headers ---
+  let headers: Record<string, string> = {};
+
+  if (options.headers) {
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => (headers[key] = value));
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => (headers[key] = value));
+    } else {
+      headers = { ...options.headers };
+    }
+  }
+
+  // если body есть и это не FormData, добавляем JSON Content-Type
+  if (body && !(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
-    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    headers,
     credentials: "include",
   });
 
@@ -19,28 +39,27 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   }
 
   if (!res.ok) {
-  if (res.status === 401 && typeof window !== "undefined") {
-    const currentPath = window.location.pathname;
-
-    // 🧠 добавляем проверку — не редиректим, если уже на логине или регистрации
-    if (currentPath !== "/login" && currentPath !== "/register") {
-      console.warn("⚠️ Сессия истекла. Перенаправляем на логин...");
-      document.cookie = "";
-      window.location.href = "/login";
+    if (res.status === 401 && typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+      if (currentPath !== "/login" && currentPath !== "/register") {
+        console.warn("⚠️ Сессия истекла. Перенаправляем на логин...");
+        document.cookie = "";
+        window.location.href = "/login";
+      }
     }
+
+    const err: any = new Error(
+      data?.error || data?.message || `HTTP error! status: ${res.status}`
+    );
+    err.status = res.status;
+    err.data = data || text;
+    throw err;
   }
-
-  const err: any = new Error(
-    data?.error || data?.message || `HTTP error! status: ${res.status}`
-  );
-  err.status = res.status;
-  err.data = data || text;
-  throw err;
-}
-
 
   return data;
 }
+
+
 
 
   // Логин

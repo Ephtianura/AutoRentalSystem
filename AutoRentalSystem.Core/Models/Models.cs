@@ -128,6 +128,8 @@ namespace AutoRentalSystem.Core.Models
         public string Transmission { get; set; } = null!;
         public int? Seats { get; set; }
 
+        public string? ImageUrl { get; set; }
+
         // Навигація
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }

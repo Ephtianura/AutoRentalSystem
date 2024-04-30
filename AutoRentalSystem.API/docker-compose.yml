@@ -40,6 +40,20 @@ services:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=AutoRental;Username=postgres;Password=54321
     restart: always
 
+  minio:
+    image: minio/minio
+    container_name: auto_rental_minio
+    ports:
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # MinIO Console
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: secret123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    restart: always
+
   # frontend:
   #   build:
   #     context: ../AutoRentalSystem.Frontend\autorentalsystem
@@ -55,3 +69,4 @@ services:
 
 volumes:
   postgres_data_new:
+  minio_data:

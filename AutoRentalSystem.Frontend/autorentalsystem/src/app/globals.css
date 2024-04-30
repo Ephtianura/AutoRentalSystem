@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-   /* Фоны */
+  /* Фоны */
   --color-bg-light: #f9fafb;
   --color-bg: #ffffff;
-  
+
+  /* Текст */
   --foreground: #171717;
-  /* 🎨 Основные цвета темы */
+  --color-text: #1f2937;
+
+  /* 🎨 Основные цвета темы — оставляем как Indigo */
   --color-primary: theme('colors.indigo.500');
-  --color-primary-hover: #6d28d9;
-  --color-primary-ring: #c4b5fd;
-  --color-primary-light: #A78BFA;
-  --color-primary-50: theme('colors.indigo.50');
+    --color-primary-50: theme('colors.indigo.50');
   --color-primary-100: theme('colors.indigo.100');
   --color-primary-200: theme('colors.indigo.200');
   --color-primary-400: theme('colors.indigo.400');
@@ -19,16 +19,19 @@
   --color-primary-600: theme('colors.indigo.600');
   --color-primary-700: theme('colors.indigo.700');
   --color-primary-800: theme('colors.indigo.800');
-    /* ⚙️ Серые оттенки */
+  --color-primary-hover: #4f46e5;   /* Indigo 600 вместо фиолетового */
+  --color-primary-ring: #a5b4fc;    /* Indigo 200-300 для ring */
+  --color-primary-light: #818cf8;   /* Indigo 400 вместо светлого фиолетового */
+
+  /* ⚙️ Серые оттенки */
   --color-gray-text: #4b5563;
   --color-gray-light: #9ca3af;
-  --color-bg-light: #f9fafb;
 
-  /* Можно добавить вторичные и нейтральные */
-  --color-secondary: #2563eb;
-  --color-bg: #ffffff;
-  --color-text: #1f2937;
+  /* Вторичные и нейтральные */
+  --color-secondary: #2563eb; /* можно оставить или тоже Indigo 700 */
 }
+
+
 /*
 :root {
   --background: #ffffff;
