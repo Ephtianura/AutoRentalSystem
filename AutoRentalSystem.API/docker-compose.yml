@@ -4,7 +4,6 @@ services:
   postgres:
     image: postgres:16
     container_name: auto_rental_postgres
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "54321"
@@ -17,7 +16,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: auto_rental_pgadmin
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -38,7 +36,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=AutoRental;Username=postgres;Password=54321
-    restart: always
 
   minio:
     image: minio/minio
@@ -52,7 +49,6 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
-    restart: always
 
   # frontend:
   #   build:
