@@ -91,7 +91,7 @@ namespace AutoRentalSystem.API.Controllers
     {
         private readonly UserService _users;
 
-        public UsersController(UserService users)  // <- интерфейс
+        public UsersController(UserService users)  
         {
             _users = users;
         }
@@ -563,7 +563,7 @@ namespace AutoRentalSystem.API.Controllers
             public DateTime DateIssued { get; set; }
             public FineStatus Status { get; set; }
             public int BookingId { get; set; }
-            public int CarId { get; set; } // можно добавить для удобства
+            public int CarId { get; set; } 
         }
 
 

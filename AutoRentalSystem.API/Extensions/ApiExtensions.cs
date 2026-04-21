@@ -29,7 +29,7 @@ namespace AutoRentalSystem.API.Extensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(jwtOptions.Secretkey)),
-                    RoleClaimType = ClaimTypes.Role // 👈 добавить это
+                    RoleClaimType = ClaimTypes.Role 
                 };
 
 

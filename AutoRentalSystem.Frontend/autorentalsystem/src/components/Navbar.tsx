@@ -42,10 +42,10 @@ const handleLogout = async () => {
           <Link href="/my-bookings" className="text-gray-600 hover:text-primary-hover transition-colors">
             Мої бронювання
           </Link>
-          <Link href="/my-fines" className="text-gray-600 hover:text-primary-hover transition-colors">
+          <Link href="/my-fines" className="hidden sm:block text-gray-600 hover:text-primary-hover transition-colors">
             Мої штрафи
           </Link>
-          <Link href="/profile" className="text-gray-600 hover:text-primary-hover transition-colors">
+          <Link href="/profile" className="hidden sm:block text-gray-600 hover:text-primary-hover transition-colors">
             Профіль
           </Link>
           {userRole === "Admin" && (
@@ -60,14 +60,14 @@ const handleLogout = async () => {
     {isLoggedIn ? (
       <button
         onClick={handleLogout}
-        className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition-colors"
+        className="hidden sm:block bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition-colors"
       >
         Вийти
       </button>
     ) : (
       <Link
         href="/login"
-        className="bg-primary text-white px-4 py-1 rounded-lg hover:bg-primary-hover transition-colors"
+        className="hidden sm:blockbg-primary text-white px-4 py-1 rounded-lg hover:bg-primary-hover transition-colors"
       >
         Увійти
       </Link>

@@ -130,7 +130,7 @@ namespace AutoRentalSystem.Core.Models
 
         public string? ImageUrl { get; set; }
 
-        // Навигація
+        // Навігація
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 
@@ -145,7 +145,7 @@ namespace AutoRentalSystem.Core.Models
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
         public decimal TotalPrice { get; set; }
 
-        // Навигація
+        // Навігація
         public User User { get; set; } = null!;
         public Car Car { get; set; } = null!;
         public Contract? Contract { get; set; }
@@ -165,7 +165,7 @@ namespace AutoRentalSystem.Core.Models
         public bool IsSignedByUser { get; set; }
         public bool IsSignedByAdmin { get; set; }
 
-        // Навигація
+        // Навігація
         public Booking Booking { get; set; } = null!;
         public User User { get; set; } = null!;
         public Car Car { get; set; } = null!;
@@ -181,7 +181,7 @@ namespace AutoRentalSystem.Core.Models
         public PaymentMethod PaymentMethod { get; set; }
         public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
 
-        // Навигація
+        // Навігація
         public Booking Booking { get; set; } = null!;
     }
 
@@ -195,7 +195,7 @@ namespace AutoRentalSystem.Core.Models
         public DateTime DateIssued { get; set; } = DateTime.UtcNow;
         public FineStatus Status { get; set; } = FineStatus.Unpaid;
 
-        // Навигація
+        // Навігація
         public Booking Booking { get; set; } = null!;
     }
 
@@ -208,7 +208,7 @@ namespace AutoRentalSystem.Core.Models
         public DateTime Date { get; set; } = DateTime.UtcNow;
         public string Details { get; set; } = string.Empty;
 
-        // Навигація
+        // Навігація
         public User User { get; set; } = null!;
     }
 }

@@ -1,3 +1,4 @@
+# Парсер структуры проекта
 import os
 
 IGNORE_NAMES = {".git", ".gitattributes", "__pycache__", ".vs", "bin", "obj", "Properties", ".gitignore", ".dockerignore"}

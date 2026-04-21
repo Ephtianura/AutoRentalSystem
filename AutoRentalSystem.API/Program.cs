@@ -8,10 +8,8 @@ using AutoRentalSystem.DataAccess;
 using AutoRentalSystem.DataAccess.Repositories;
 using AutoRentalSystem.Infrastructure.Auth;
 using AutoRentalSystem.Infrastructure.FileStorage;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,10 +93,6 @@ builder.Services.AddCors(options =>
 });
 
 
-
-
-
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -106,10 +100,11 @@ builder.Services.AddControllers()
     });
 
 
+
+
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
-app.UseCors("AllowLocalhost");
 
 if (app.Environment.IsDevelopment())
 {
@@ -118,12 +113,11 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
 app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-    MinimumSameSitePolicy = SameSiteMode.Strict,
+    MinimumSameSitePolicy = SameSiteMode.None,
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always
 }
