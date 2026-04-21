@@ -44,7 +44,7 @@
 
 ### Керування автопарком та бронюваннями
 Адмін-панель для додавання нових авто, редагування існуючих та підтвердження заявок на оренду.
-![Список автомобілів в адмінці](screenshots/admin_cars.jpg)
+![Список автомобілів в адмінці](screenshots/admin_cars_crud.jpg)
 ![Управління бронюваннями](screenshots/admin_bookings.jpg)
 
 ---
@@ -96,7 +96,7 @@ docker exec -i auto_rental_postgres psql -U postgres -d AutoRental < .files/dump
 ### 2.2 Підключення до MinIO
 Створіть псевдонім для вашого локального сервера, щоб зручно звертатися до нього:
 ```bash
-`mc alias set local http://localhost:9000 admin secret123`
+mc alias set local http://localhost:9000 admin secret123
 ```
 *Параметри: назва (`local`), URL (`http://localhost:9000`), логін (`admin`) та пароль (`secret123`).*
 
@@ -106,7 +106,7 @@ docker exec -i auto_rental_postgres psql -U postgres -d AutoRental < .files/dump
 Створіть новий контейнер з назвою `cars-images`:
 
 ```bash
-`mc mb local/cars-images`
+mc mb local/cars-images
 ```
 ---
 
@@ -120,14 +120,14 @@ mc cp images.zip local/cars-images/
 #### 2.5 Завантаження зображень у MinIO
 Завантажте вміст локальної папки у створений бакет на сервері:
 ```bash
-`mc cp --recursive ./images local/cars-images`
+mc cp --recursive ./images local/cars-images
 ```
 ---
 
 #### 2.6 Перевірка завантажених файлів
 Переконайтеся, що всі файли успішно завантажені, переглянувши вміст бакету:
 ```bash
-`mc ls local/cars-images`
+mc ls local/cars-images
 ```
 ---
 
